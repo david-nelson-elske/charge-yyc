@@ -1,0 +1,956 @@
+Delivered-To: david.nelson.elske@gmail.com
+Received: by 2002:a05:7010:4e0d:b0:4d1:d1a3:9459 with SMTP id v13csp4108141mdp;
+        Tue, 18 Nov 2025 08:10:08 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE+I7Kp73lTSO3XUJzo910P2Xw/QMHVePI7mWCJ5aqT16/Tq3z/M2jxAJNcLWFIqW6fHYPe
+X-Received: by 2002:a05:622a:546:b0:4e8:a850:e7db with SMTP id d75a77b69052e-4edf214c213mr211010041cf.71.1763482208327;
+        Tue, 18 Nov 2025 08:10:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1763482208; cv=none;
+        d=google.com; s=arc-20240605;
+        b=JL+I2zGAmf4HaymL1gPlymKhP2rhTDTrvCoabR3dPcVDwsfLVg7kbccvrMaC4dyFE0
+         ljfk/U4QZjpjq9stnY/UugJWXsoPsSpilU+/UgYyUvkTxCp6vq9TjSgY1pK31QTgDERu
+         kHf2h+tsDVeutcVRCCLIj7BLsO0kv+59lSYLkqUjh5jGg11CA3TawBP7d7jvIJaNa9Sh
+         09mKenfXahSnFAEFxc+6YS1kI6ATT9baw3BM/J+LAslv7icws9Im+fyHgyCTau7XlXr1
+         JX/HJB+h6P1vJyEzj5BKTiPROFilCgnYqmKmZIzoEMEBXwuzT4tUKGhtIHer7C6faudB
+         S4jA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=feedback-id:message-id:content-transfer-encoding:subject:date:to
+         :from:mime-version:dkim-signature:dkim-signature;
+        bh=gIrZnb2lcs4JcpBeOtJ0RdZnh347XhZkY+WNREpVbs8=;
+        fh=rt62lMEKQhhZDtedT6xqAUJC8Qny4ARynlDuZLViFVM=;
+        b=kCBwyOgrlYDvB7cITzXZirV/2PFug1nojKHbT2Y1dx+LGhpi4SVsbi01Wz2akSMbv/
+         mV9sIjkBDtsqXwHZZhaG7C3B0AQg68TJUYNTMN8PJB4FuZ8Wdt8pIPESOo2T8TagP/7B
+         nsxGywuv7krJfZcTwtpqGq4kGaaWXj3XC484z+8miF8oTgQzxvEfQ5GVlssxZLkv7/eg
+         56FhIYGSNowEA2XEtiKH/qUFIL30SuKRkfD478wU9ZJBXKoYaRx9qjHay8mCzcCEmEQf
+         q+PYoWW3nfoJrOpylHYygQDjtP6FwSS5YlwXcMvqSdhX71Tgz5ZTa9A1oQE+HZX3JDjb
+         YXGw==;
+        dara=google.com
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@enmax.com header.s=dej7s4rwh5ffuwfcbvkydjsoyfabsqmu header.b=NKfkW5Fr;
+       dkim=pass header.i=@amazonses.com header.s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw header.b="RE/fjJv2";
+       spf=pass (google.com: domain of 0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@amazonses.com designates 54.240.44.172 as permitted sender) smtp.mailfrom=0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@amazonses.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=enmax.com
+Return-Path: <0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@amazonses.com>
+Received: from a44-172.smtp-out.amazonses.com (a44-172.smtp-out.amazonses.com. [54.240.44.172])
+        by mx.google.com with ESMTPS id d75a77b69052e-4ee1730211fsi28357101cf.1425.2025.11.18.08.10.08
+        for <david.nelson.elske@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Nov 2025 08:10:08 -0800 (PST)
+Received-SPF: pass (google.com: domain of 0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@amazonses.com designates 54.240.44.172 as permitted sender) client-ip=54.240.44.172;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@enmax.com header.s=dej7s4rwh5ffuwfcbvkydjsoyfabsqmu header.b=NKfkW5Fr;
+       dkim=pass header.i=@amazonses.com header.s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw header.b="RE/fjJv2";
+       spf=pass (google.com: domain of 0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@amazonses.com designates 54.240.44.172 as permitted sender) smtp.mailfrom=0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@amazonses.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=enmax.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=dej7s4rwh5ffuwfcbvkydjsoyfabsqmu; d=enmax.com; t=1763482207;
+	h=MIME-Version:From:To:Date:Subject:Content-Type:Content-Transfer-Encoding:Message-ID;
+	bh=tWyFWhX6vGBBj+8ZlFGuq7lrVetn53kbB32MP+ff7xI=;
+	b=NKfkW5Fr+uS/pNy6EAXUGcEECW5zDUSZTCUj2nIjIS69GIxLZOTVp9X9YKkT/lsM
+	fRpesmW6sSs13Zd/4DuxhnXOOr8ap9PTHKMoYG+yoiNChiYOUiogzOENx1k2jlMT2VU
+	Kb600Uj88ftgPgUDmtsI2EhnyoLg94MJbRC9yakFHgCdY1VZt3kbkHwypBQXwnFZrnZ
+	/KxV3PYMlr8FH3ZberNhqc+lRY9lsg45RRIqNlNmYo7nBbdEPge7UuxuT5VXnPl1IST
+	iGRjBcTqpSZROuRDlMAGNXKQ/NvPzkfhWJYAyXRPpFPbrvz2+k6uT/pAiJ0aGqjlhDt
+	DKzm0rHK8w==
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+	s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1763482207;
+	h=MIME-Version:From:To:Date:Subject:Content-Type:Content-Transfer-Encoding:Message-ID:Feedback-ID;
+	bh=tWyFWhX6vGBBj+8ZlFGuq7lrVetn53kbB32MP+ff7xI=;
+	b=RE/fjJv2G5N5MeFz+U6fNpNr4b3qmLBBwaTyJpPxIoAJiJiwolXUg1KFH5iHqKmH
+	TQU9PCny84zRLO+0EywCSISwB61WYLJ4ut5xN3geC0JGLfZvkvB91fSWKurLTydxJk9
+	IhRLriv5nWWa0+sWC7hSefF49J9zj466BNqJbt90=
+MIME-Version: 1.0
+From: donotreply@enmax.com
+To: david.nelson.elske@gmail.com
+Date: Tue, 18 Nov 2025 16:10:07 +0000
+Subject: =?utf-8?B?MzQxMiBQYXJrZGFsZSBCbHZkLiBOLlcuIOKAkyBSZXNpZGVu?=
+ =?utf-8?B?dGlhbCBSZWxvY2F0ZS9Nb2RpZnkgRXhpc3RpbmcgSW5mcmFzdHJ1Y3R1?=
+ =?utf-8?B?cmU=?=
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <0100019a97bb0629-909c3d41-63a1-415e-8042-532a62bf9ee3-000000@email.amazonses.com>
+Feedback-ID: ::1.us-east-1.lyWDMGzn2GlEZEEFnx7X30T0fFT/6JeiGWlscZyrDho=:AmazonSES
+X-SES-Outgoing: 2025.11.18-54.240.44.172
+
+=0D=0A<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "h=
+ttp://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">=0D=0A<html xml=
+ns=3D"http://www.w3.org/1999/xhtml">=0D=0A<head>=0D=0A    <meta h=
+ttp-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8"=
+ />=0D=0A    <meta name=3D"viewport" content=3D"width=3Ddevice-wi=
+dth, initial-scale=3D1.0" />=0D=0A    <title>New Project Form</ti=
+tle>=0D=0A    <style type=3D"text/css">=0D=0A        body {=0D=0A=
+            color: #333333;=0D=0A            font-family: Calibri=
+, Helvetica, Arial, sans-serif;=0D=0A            font-size: 11pt;=
+=0D=0A            margin: 0;=0D=0A            width: 100%;=0D=0A =
+       }=0D=0A=0D=0A        table {=0D=0A            border-colla=
+pse: collapse;=0D=0A            border-spacing: 0;=0D=0A        }=
+=0D=0A=0D=0A        a {=0D=0A            color: #749DD2;=0D=0A   =
+         text-decoration: none;=0D=0A        }=0D=0A=0D=0A       =
+     a:hover {=0D=0A                text-decoration: underline;=0D=0A=
+            }=0D=0A    </style>=0D=0A</head>=0D=0A<body>=0D=0A   =
+ <table cellpadding=3D"0" cellspacing=3D"0" border=3D"0" id=3D"ba=
+ckgroundTable" align=3D"center" style=3D"background: #F2F5F7; pad=
+ding: 50px 0; width: 100%;">=0D=0A        <tr>=0D=0A            <=
+td style=3D"padding: 14px 0;">=0D=0A                <table border=
+=3D"0" cellspacing=3D"0" width=3D"100%">=0D=0A                   =
+ <tr>=0D=0A                        <td></td>=0D=0A               =
+         <td width=3D"600" style=3D"background: #FFFFFF; border: =
+0px; border-radius: 10px;">=0D=0A                            <tab=
+le cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" align=3D"ce=
+nter">=0D=0A=0D=0A                                <!-- Heading --=
+>=0D=0A                                <tr>=0D=0A                =
+                    <td style=3D"padding: 34px 14px 24px 24px;" a=
+lign=3D"left">=0D=0A                                        <img =
+alt=3D"ENMAX" src=3D"https://assets.enmax.com/api/public/content/=
+0612045520e544f7838825c672f137e6?v=3D4b71ffd5" width=3D"120" />=0D=0A=
+                                    </td>=0D=0A                  =
+                  <td style=3D"padding: 34px 14px 14px 14px;" ali=
+gn=3D"right">=0D=0A                                        <p>=0D=0A=
+                                            <a href=3D"https://ww=
+w.enmax.com/" style=3D"color: #E31837; font-size: 12px; font-fami=
+ly: Calibri, Helvetica, Arial, sans-serif; text-decoration: none;=
+">=0D=0A                                                <span sty=
+le=3D"color: #749DD2">enmax.com</span>=0D=0A                     =
+                       </a>=0D=0A                                =
+        </p>=0D=0A                                    </td>=0D=0A=
+                                </tr>=0D=0A								<!-- Line -->=0D=0A=
+                                <tr><td height=3D"5" colspan=3D"2=
+" style=3D"background: #E31837; font-size: 1px; line-height: 0; h=
+eight: 5px !important;"><div>&nbsp;</div></td></tr>=0D=0A        =
+                    </table>=0D=0A							=0D=0A							=0D=0A					=
+		<table cellpadding=3D"24" cellspacing=3D"0" width=3D"100%" alig=
+n=3D"center">=0D=0A								<tr>=0D=0A									<td>=0D=0A									=
+<!-- Insert data <tr> blocks here -->=0D=0A									=0D=0A							=
+			<table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%" alig=
+n=3D"center">=0D=0A=0D=0A                                =0D=0A  =
+                              <!-- Customer -->=0D=0A            =
+                    <tr>=0D=0A                                   =
+ <td colspan=3D"2" style=3D"padding: 14px 0;">=0D=0A										<h1=
+ style=3D"font-family: Calibri, Helvetica, Arial, sans-serif; fon=
+t-size: 29px; text-align: center;">=0D=0A											ELECTRICITY S=
+ERVICE REQUEST NOTIFICATION=0D=0A										</h1>=0D=0A										<=
+table style=3D"width: 100%;">=0D=0A											<tr>=0D=0A									=
+			<td align=3D"center">=0D=0A													<table cellpadding=3D"=
+5" style=3D"background: #f5f5f5; border: 1px solid #dddddd; width=
+: 100%;">=0D=0A														<tr>=0D=0A															<td>=0D=0A	=
+															<img src=3D"https://assets.enmax.com/api/public/co=
+ntent/1a5593d05b854f5ba278aa1430627abd?v=3D07b98ed1" width=3D"60"=
+ /> =0D=0A															</td>=0D=0A															<td style=3D"f=
+ont-family: Calibri, Helvetica, Arial, sans-serif;padding: 20px">=
+=0D=0A																Your request has been successfully submitte=
+d.<br /> We will contact you as soon as possible to discuss the n=
+ext steps. Please note that current volumes may affect response t=
+imes. =0D=0A															</td>=0D=0A														</tr>=0D=0A		=
+											</table>=0D=0A												</td>=0D=0A											</tr>=0D=0A=
+										</table>=0D=0A										<br />=0D=0A										<p style=3D=
+"font-family: Calibri, Helvetica, Arial, sans-serif;">=0D=0A					=
+						From: ENMAX Project Intake (GetConnected)<br />=0D=0A						=
+					Residential Requests: Relocate/modify existing ENMAX infrast=
+ructure<br />=0D=0A											Address: 141-50th Avenue SE T2G 4S7=
+<br />=0D=0A											Phone: 403-514-3716<br />=0D=0A											=
+Email: <a href=3D"mailto:getconnected@enmax.com">getconnected@enm=
+ax.com</a>=0D=0A										</p>=0D=0A										<p style=3D"font-fa=
+mily: Calibri, Helvetica, Arial, sans-serif;">=0D=0A											<s=
+pan style=3D"font-size: 22px; font-weight: 700;">What's Next?</sp=
+an><br />=0D=0A											Thank you for completing the ENMAX serv=
+ice request intake form. Our Project Intake team has received you=
+r residential =0D=0A											electricity service request and ar=
+e in the process of reviewing all documentation to ensure we can =
+support your electrical service requirements. =0D=0A											We=
+ will contact you within two business days to discuss next steps =
+which may include the following:=0D=0A										</p>=0D=0A							=
+			<ul style=3D"font-family: Calibri, Helvetica, Arial, sans-seri=
+f;">=0D=0A											<li>Estimated construction timelines*</li>=0D=0A=
+											<li>An initial payment request to begin design and eng=
+ineering requirements for a detailed quotation.**</li>=0D=0A					=
+					</ul>=0D=0A										<p style=3D"font-family: Calibri, Helve=
+tica, Arial, sans-serif;">=0D=0A											*Timelines refer to th=
+e construction of facilities needed for your electricity project =
+and vary  from project to project depending on requirements =0D=0A=
+											and complexity. Timelines are dependent on the receipt=
+ of the initial payment.<br />=0D=0A											**The initial paym=
+ent is required to cover costs associated with preliminary design=
+ and formal quotation. These costs will be deducted from the fina=
+l =0D=0A											quoted project costs. In the event of project =
+cancellation, you will be provided a refund minus costs incurred.=
+=0D=0A										</p>=0D=0A										<p style=3D"font-family: Cali=
+bri, Helvetica, Arial, sans-serif;">=0D=0A											<span style=3D=
+"font-size: 22px; font-weight: 700;">Questions, Concerns or Addit=
+ional Information?</span><br />=0D=0A											We look forward t=
+o serving your electrical needs. If you have any outstanding ques=
+tions or concerns, please contact us at =0D=0A											<a href=3D=
+"mailto:getconnected@enmax.com">getconnected@enmax.com</a> or <a =
+herf=3D"tel:4035143716">403-514-3716</a>.=0D=0A										</p>=0D=0A=
+										<p style=3D"font-family: Calibri, Helvetica, Arial, san=
+s-serif;">=0D=0A											For further information, please read o=
+ut full =0D=0A											<a href=3D"https://assets.enmax.com/api/=
+public/content/cd60b221de2f49a182d37d5826d815a2?v=3D0e4dceda">ter=
+ms and conditions</a> available on our website.=0D=0A										</=
+p>=0D=0A										<p style=3D"font-family: Calibri, Helvetica, Ar=
+ial, sans-serif;">=0D=0A											ENMAX values your feedback! Le=
+t us know if you experienced any issues or have any suggestions t=
+o improve our project intake form.=0D=0A										</p>=0D=0A					=
+					<table width=3D"100%" cellspacing=3D"0" cellpadding=3D"0">=0D=0A=
+											<tr>=0D=0A												<td>=0D=0A													<table ce=
+llspacing=3D"0" cellpadding=3D"0">=0D=0A														<tr>=0D=0A	=
+														<td bgcolor=3D"#005d8b" style=3D"border-radius: 4px=
+;">=0D=0A																<!--[if mso]>=0D=0A																<v:ro=
+undrect xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:w=3D"urn:=
+schemas-microsoft-com:office:word" rel=3D"noopener" target=3D"_bl=
+ank" =0D=0A																	href=3D"https://surveys.crazyegg.com/=
+s/341576/8d099143-4ae0-4516-b2ce-c0ad66716939" style=3D"height: 3=
+8px; v-text-anchor: middle; width: 129px;" arcsize=3D"20%" stroke=
+=3D"f" fillcolor=3D"#005d8b">=0D=0A																<w:anchorlock/=
+>=0D=0A																<center>=0D=0A																<![endif]-->=
+=0D=0A																<a href=3D"https://surveys.crazyegg.com/s/3=
+41576/8d099143-4ae0-4516-b2ce-c0ad66716939" target=3D"_blank" sty=
+le=3D"border-radius: 4px; color: #ffffff; display: inline-block; =
+font-family: Calibri, Helvetica, Arial, sans-serif; font-size: 15=
+px; font-weight: bold; padding: 10px 16px; text-decoration: none;=
+">=0D=0A																	Take the survey=0D=0A																</a=
+>=0D=0A																<!--[if mso]>=0D=0A																</cente=
+r>=0D=0A																</v:roundrect>=0D=0A																<![en=
+dif]-->=0D=0A															</td>=0D=0A														</tr>=0D=0A	=
+												</table>=0D=0A												</td>=0D=0A											</tr>=
+=0D=0A										</table>=0D=0A                                   =
+ </td>=0D=0A                                </tr>=0D=0A          =
+                      =0D=0A                                </tr>=
+=0D=0A=0D=0A                                <!-- Project informat=
+ion -->=0D=0A                                <tr>=0D=0A          =
+                          <td colspan=3D"2">=0D=0A               =
+                         <h2 style=3D"color: #666666; font-size: =
+18px; font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri'; =
+font-weight: bold; line-height: 1.5em; margin-bottom: 10px; margi=
+n-top: 30px;">=0D=0A                                            P=
+roject information=0D=0A                                        <=
+/h2>=0D=0A                                    </td>=0D=0A        =
+                        </tr>=0D=0A                              =
+  <tr>=0D=0A                                    <td colspan=3D"2"=
+>=0D=0A                                        <table cellpadding=
+=3D"0" cellspacing=3D"0" width=3D"100%">=0D=0A                   =
+                         <!-- Project address -->=0D=0A          =
+                                  <tr>=0D=0A                     =
+                           <td width=3D"120" style=3D"border-bott=
+om: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                =
+                                    <span style=3D"color: #777777=
+; font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-s=
+erif">=0D=0A                                                     =
+   Project address:=0D=0A                                        =
+            </span>=0D=0A                                        =
+        </td>=0D=0A                                              =
+  <td style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6p=
+x;">=0D=0A                                                    <sp=
+an style=3D"color: #777777; font-size: 15px; font-family: Calibri=
+, Helvetica, Arial, sans-serif">=0D=0A                           =
+                             3412 Parkdale Blvd. N.W.=0D=0A      =
+                                              </span>=0D=0A      =
+                                          </td>=0D=0A            =
+                                </tr>=0D=0A                      =
+                      <!-- Project city -->=0D=0A                =
+                            <tr>=0D=0A                           =
+                     <td width=3D"120" style=3D"border-bottom: 1p=
+x dotted #c7c6bf; padding: 6px 6px;">=0D=0A                      =
+                              <span style=3D"color: #777777; font=
+-size: 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=
+=0D=0A                                                        Cit=
+y:=0D=0A                                                    </spa=
+n>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          Calgary=0D=0A                                          =
+          </span>=0D=0A                                          =
+      </td>=0D=0A                                            </tr=
+>=0D=0A                                            <!-- Project p=
+rovince -->=0D=0A                                            <tr>=
+=0D=0A                                                <td width=3D=
+"120" style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6p=
+x;">=0D=0A                                                    <sp=
+an style=3D"color: #777777; font-size: 15px; font-family: Calibri=
+, Helvetica, Arial, sans-serif">=0D=0A                           =
+                             Province:=0D=0A                     =
+                               </span>=0D=0A                     =
+                           </td>=0D=0A                           =
+                     <td style=3D"border-bottom: 1px dotted #c7c6=
+bf; padding: 6px 6px;">=0D=0A                                    =
+                <span style=3D"color: #777777; font-size: 15px; f=
+ont-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A        =
+                                                AB=0D=0A         =
+                                           </span>=0D=0A         =
+                                       </td>=0D=0A               =
+                             </tr>=0D=0A                         =
+                   <!-- Project postal code -->=0D=0A            =
+                                <tr>=0D=0A                       =
+                         <td width=3D"120" style=3D"border-bottom=
+: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                  =
+                                  <span style=3D"color: #777777; =
+font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-ser=
+if">=0D=0A                                                       =
+ Postal code:=0D=0A                                              =
+      </span>=0D=0A                                              =
+  </td>=0D=0A                                                <td =
+style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  T2N 3T4=0D=0A                                  =
+                  </span>=0D=0A                                  =
+              </td>=0D=0A                                        =
+    </tr>=0D=0A                                            <!-- R=
+equested service date -->=0D=0A                                  =
+          <tr>=0D=0A                                             =
+   <td width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; =
+padding: 6px 6px;">=0D=0A                                        =
+            <span style=3D"color: #777777; font-size: 15px; font-=
+family: Calibri, Helvetica, Arial, sans-serif">=0D=0A            =
+                                            Requested completion =
+date:=0D=0A                                                    </=
+span>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          03/31/2026=0D=0A                                       =
+             </span>=0D=0A                                       =
+         </td>=0D=0A                                            <=
+/tr>=0D=0A                                            <!-- Projec=
+t contact name -->=0D=0A                                         =
+   <tr>=0D=0A                                                <td =
+width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; padding=
+: 6px 6px;">=0D=0A                                               =
+     <span style=3D"color: #777777; font-size: 15px; font-family:=
+ Calibri, Helvetica, Arial, sans-serif">=0D=0A                   =
+                                     Contact name:=0D=0A         =
+                                           </span>=0D=0A         =
+                                       </td>=0D=0A               =
+                                 <td style=3D"border-bottom: 1px =
+dotted #c7c6bf; padding: 6px 6px;">=0D=0A                        =
+                            <span style=3D"color: #777777; font-s=
+ize: 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A=
+                                                        David Nel=
+son Elske=0D=0A                                                  =
+  </span>=0D=0A                                                </=
+td>=0D=0A                                            </tr>=0D=0A =
+                                           <!-- Project company n=
+ame -->=0D=0A                                            <tr>=0D=0A=
+                                                <td width=3D"120"=
+ style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  Contact company name:=0D=0A                    =
+                                </span>=0D=0A                    =
+                            </td>=0D=0A                          =
+                      <td style=3D"border-bottom: 1px dotted #c7c=
+6bf; padding: 6px 6px;">=0D=0A                                   =
+                 <span style=3D"color: #777777; font-size: 15px; =
+font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A       =
+                                                 =0D=0A          =
+                                              Hemisphere on The B=
+ow - OCP 9913090=0D=0A                                           =
+             =0D=0A                                              =
+      </span>=0D=0A                                              =
+  </td>=0D=0A                                            </tr>=0D=0A=
+                                            <!-- Project contact =
+phone number -->=0D=0A                                           =
+ <tr>=0D=0A                                                <td wi=
+dth=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; padding: =
+6px 6px;">=0D=0A                                                 =
+  =20<span style=3D"color: #777777; font-size: 15px; font-family:=
+ Calibri, Helvetica, Arial, sans-serif">=0D=0A                   =
+                                     Contact phone number:=0D=0A =
+                                                   </span>=0D=0A =
+                                               </td>=0D=0A       =
+                                         <td style=3D"border-bott=
+om: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                =
+                                    <span style=3D"color: #777777=
+; font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-s=
+erif">=0D=0A                                                     =
+   =0D=0A                                                        =
+(403) 650-5365=0D=0A                                             =
+           =0D=0A                                                =
+        =0D=0A                                                   =
+ </span>=0D=0A                                                </t=
+d>=0D=0A                                            </tr>=0D=0A  =
+                                          <!-- Project contact mo=
+bile number -->=0D=0A                                            =
+<tr>=0D=0A                                                <td wid=
+th=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6=
+px 6px;">=0D=0A                                                  =
+  <span style=3D"color: #777777; font-size: 15px; font-family: Ca=
+libri, Helvetica, Arial, sans-serif">=0D=0A                      =
+                                  Contact mobile number:=0D=0A   =
+                                                 </span>=0D=0A   =
+                                             </td>=0D=0A         =
+                                       <td style=3D"border-bottom=
+: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                  =
+                                  <span style=3D"color: #777777; =
+font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-ser=
+if">=0D=0A                                                       =
+ =0D=0A                                                        N/=
+A=0D=0A                                                        =0D=0A=
+                                                    </span>=0D=0A=
+                                                </td>=0D=0A      =
+                                      </tr>=0D=0A                =
+                            <!-- Project contact email -->=0D=0A =
+                                           <tr>=0D=0A            =
+                                    <td width=3D"120" style=3D"bo=
+rder-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A       =
+                                             <span style=3D"color=
+: #777777; font-size: 15px; font-family: Calibri, Helvetica, Aria=
+l, sans-serif">=0D=0A                                            =
+            Contact email:=0D=0A                                 =
+                   </span>=0D=0A                                 =
+               </td>=0D=0A                                       =
+         <td style=3D"border-bottom: 1px dotted #c7c6bf; padding:=
+ 6px 6px;">=0D=0A                                                =
+    <span style=3D"color: #777777; font-size: 15px; font-family: =
+Calibri, Helvetica, Arial, sans-serif">=0D=0A                    =
+                                    david.nelson.elske@gmail.com=0D=0A=
+                                                    </span>=0D=0A=
+                                                </td>=0D=0A      =
+                                      </tr>=0D=0A                =
+                        </table>=0D=0A                           =
+         </td>=0D=0A                                </tr>=0D=0A=0D=0A=
+                                <!-- Service request -->=0D=0A   =
+                             <tr>=0D=0A                          =
+          <td colspan=3D"2">=0D=0A                               =
+         <h2 style=3D"color: #666666; font-size: 18px; font-famil=
+y: 'Calibri Bold', 'Calibri Regular', 'Calibri'; font-weight: bol=
+d; line-height: 1.5em; margin-bottom: 10px; margin-top: 30px;">=0D=0A=
+                                            Service request=0D=0A=
+                                        </h2>=0D=0A              =
+                      </td>=0D=0A                                =
+</tr>=0D=0A                                <tr>=0D=0A            =
+                        <td colspan=3D"2">=0D=0A                 =
+                       <table cellpadding=3D"0" cellspacing=3D"0"=
+ width=3D"100%">=0D=0A                                           =
+ <!-- Property type -->=0D=0A                                    =
+        <tr>=0D=0A                                               =
+ <td width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; pa=
+dding: 6px 6px;">=0D=0A                                          =
+          <span style=3D"color: #777777; font-size: 15px; font-fa=
+mily: Calibri, Helvetica, Arial, sans-serif">=0D=0A              =
+                                          Property type:=0D=0A   =
+                                                 </span>=0D=0A   =
+                                             </td>=0D=0A         =
+                                       <td style=3D"border-bottom=
+: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                  =
+                                  <span style=3D"color: #777777; =
+font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-ser=
+if">=0D=0A                                                       =
+ Residential=0D=0A                                               =
+     </span>=0D=0A                                               =
+ </td>=0D=0A                                            </tr>=0D=0A=
+                                            <!-- Service type -->=
+=0D=0A                                            <tr>=0D=0A     =
+                                           <td width=3D"120" styl=
+e=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  Service type:=0D=0A                            =
+                        </span>=0D=0A                            =
+                    </td>=0D=0A                                  =
+              <td style=3D"border-bottom: 1px dotted #c7c6bf; pad=
+ding: 6px 6px;">=0D=0A                                           =
+         <span style=3D"color: #777777; font-size: 15px; font-fam=
+ily: Calibri, Helvetica, Arial, sans-serif">=0D=0A               =
+                                         Relocate/modify existing=
+ ENMAX infrastructure=0D=0A                                      =
+              </span>=0D=0A                                      =
+          </td>=0D=0A                                            =
+</tr>=0D=0A											<!-- Project relation--->=0D=0A											<=
+tr>=0D=0A                                                <td widt=
+h=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6p=
+x 6px;">=0D=0A                                                   =
+ <span style=3D"color: #777777; font-size: 15px; font-family: Cal=
+ibri, Helvetica, Arial, sans-serif">=0D=0A                       =
+                                 What is your relationship to thi=
+s project?=0D=0A                                                 =
+   </span>=0D=0A                                                <=
+/td>=0D=0A                                                <td sty=
+le=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  Other=0D=0A                                    =
+                </span>=0D=0A                                    =
+            </td>=0D=0A                                          =
+  </tr>=0D=0A											=0D=0A											<tr>=0D=0A              =
+                                  <td width=3D"120" style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          List other relationship:=0D=0A                         =
+                           </span>=0D=0A                         =
+                       </td>=0D=0A                               =
+                 <td style=3D"border-bottom: 1px dotted #c7c6bf; =
+padding: 6px 6px;">=0D=0A                                        =
+            <span style=3D"color: #777777; font-size: 15px; font-=
+family: Calibri, Helvetica, Arial, sans-serif">=0D=0A            =
+                                            Member of Condo Board=
+=0D=0A                                                    </span>=
+=0D=0A                                                </td>=0D=0A=
+                                            </tr>=0D=0A										=
+	=0D=0A											<!--Inquiry Reasons -->=0D=0A											<tr>=0D=0A=
+                                                <td width=3D"120"=
+ style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  What is the reason for your inquiry today?=0D=0A=
+                                                    </span>=0D=0A=
+                                                </td>=0D=0A      =
+                                          <td style=3D"border-bot=
+tom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A               =
+                                     <span style=3D"color: #77777=
+7; font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-=
+serif">=0D=0A                                                    =
+    Electrification (i.e. air conditioner, ev chargers, electric =
+furnace)=0D=0A                                                   =
+ </span>=0D=0A                                                </t=
+d>=0D=0A                                            </tr>=0D=0A		=
+									=0D=0A                                        </table>=0D=0A=
+                                    </td>=0D=0A                  =
+              </tr>=0D=0A=0D=0A                                <!=
+-- Existing service -->=0D=0A                                =0D=0A=
+=0D=0A                                <!-- New service -->=0D=0A =
+                               =0D=0A=0D=0A                      =
+          <!-- Additional details -->=0D=0A                      =
+          <tr>=0D=0A                                    <td colsp=
+an=3D"2">=0D=0A                                        <h2 style=3D=
+"color: #666666; font-size: 18px; font-family: 'Calibri Bold', 'C=
+alibri Regular', 'Calibri'; font-weight: bold; line-height: 1.5em=
+; margin-bottom: 10px; margin-top: 30px;">=0D=0A                 =
+                           Additional details=0D=0A              =
+                          </h2>=0D=0A                            =
+        </td>=0D=0A                                </tr>=0D=0A   =
+                             <tr>=0D=0A                          =
+          <td colspan=3D"2">=0D=0A                               =
+         <table cellpadding=3D"0" cellspacing=3D"0" width=3D"100%=
+">=0D=0A                                            =0D=0A       =
+                                     <!-- Description -->=0D=0A  =
+                                          =0D=0A                 =
+                           <tr>=0D=0A                            =
+                    <td width=3D"120" style=3D"border-bottom: 1px=
+ dotted #c7c6bf; padding: 6px 6px;">=0D=0A                       =
+                             <span style=3D"color: #777777; font-=
+size: 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A=
+                                                        Descripti=
+on:=0D=0A                                                    </sp=
+an>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          Project Overview: We are a 28-unit, 4-storey condominiu=
+m building constructed in 1999, currently applying for the City o=
+f Calgarys ChargeYYC Phase 2 Multi-Residential Pilot Program. We =
+are preparing to install EV charging infrastructure in our underg=
+round parkade and need to understand what electrical service upgr=
+ades may be required.=0A=0A- Installation of Level 2 (208V/240V) =
+EV charging stations=0A- Number of charging stations: To be deter=
+mined based on final design - initially planning for approximatel=
+y 10=0A- EV Energy Management System (EVEMS) to manage electrical=
+ loads, integrated behind the meter into exisiting service=0A- Po=
+tential Vehicle-to-Building (V2B) bidirectional charging capabili=
+ty where supported by equipment and regulations=0A=0ALoad Assessm=
+ent Needs: We need to determine:=0AWhether our current electrical=
+ service has adequate capacity to support EV charging infrastruct=
+ure=0AWhat infrastructure upgrades in the area may be required to=
+ support the increased load=0AThe scope of construction required =
+to complete the proposed upgrade=0ATimeline and coordination requ=
+irements=0A=0A=0D=0A                                             =
+       </span>=0D=0A                                             =
+   </td>=0D=0A                                            </tr>=0D=0A=
+                                            =0D=0A               =
+                             <!-- Permit conflict -->=0D=0A      =
+                                      <tr>=0D=0A                 =
+                               <td width=3D"120" style=3D"border-=
+bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A            =
+                                        <span style=3D"color: #77=
+7777; font-size: 15px; font-family: Calibri, Helvetica, Arial, sa=
+ns-serif">=0D=0A                                                 =
+       Permit conflict:=0D=0A                                    =
+                </span>=0D=0A                                    =
+            </td>=0D=0A                                          =
+      <td style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6p=
+x 6px;">=0D=0A                                                   =
+ <span style=3D"color: #777777; font-size: 15px; font-family: Cal=
+ibri, Helvetica, Arial, sans-serif">=0D=0A                       =
+                                 No=0D=0A                        =
+                            </span>=0D=0A                        =
+                        </td>=0D=0A                              =
+              </tr>=0D=0A                                        =
+    <!-- Permit conflict number -->=0D=0A                        =
+                    =0D=0A                                       =
+     <!-- On-site generation -->=0D=0A                           =
+                 <tr>=0D=0A                                      =
+          <td width=3D"120" style=3D"border-bottom: 1px dotted #c=
+7c6bf; padding: 6px 6px;">=0D=0A                                 =
+                   <span style=3D"color: #777777; font-size: 15px=
+; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A     =
+                                                   On-site genera=
+tion:=0D=0A                                                    </=
+span>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          No=0D=0A                                               =
+     </span>=0D=0A                                               =
+ </td>=0D=0A                                            </tr>=0D=0A=
+                                            <!-- Generation type =
+-->=0D=0A                                            =0D=0A      =
+                                      <!-- Any additional details=
+ -->=0D=0A                                            =0D=0A     =
+                                   </table>=0D=0A                =
+                    </td>=0D=0A                                </=
+tr>=0D=0A=0D=0A                                <!-- Attachments -=
+->=0D=0A                                <tr>=0D=0A               =
+                     <td colspan=3D"2">=0D=0A                    =
+                    <h2 style=3D"color: #666666; font-size: 18px;=
+ font-family: 'Calibri Bold', 'Calibri Regular', 'Calibri'; font-=
+weight: bold; line-height: 1.5em; margin-bottom: 10px; margin-top=
+: 30px;">=0D=0A                                            Attach=
+ments=0D=0A                                        </h2>=0D=0A   =
+                                 </td>=0D=0A                     =
+           </tr>=0D=0A                                <tr>=0D=0A =
+                                   <td colspan=3D"2">=0D=0A      =
+                                  <table cellpadding=3D"0" cellsp=
+acing=3D"0" width=3D"100%">=0D=0A                                =
+            <tr>=0D=0A                                           =
+     <td width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf=
+; padding: 6px 6px;">=0D=0A                                      =
+              <span style=3D"color: #777777; font-size: 15px; fon=
+t-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A          =
+                                              Documents=0D=0A    =
+                                                </span>=0D=0A    =
+                                            </td>=0D=0A          =
+                                      <td style=3D"border-bottom:=
+ 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                   =
+                                 <span style=3D"color: #777777; f=
+ont-size: 15px; font-family: Calibri, Helvetica, Arial, sans-seri=
+f">=0D=0A                                                        =
+=0D=0A                                                        =0D=0A=
+                                                        =0D=0A   =
+                                                     N/A=0D=0A   =
+         =20                                           =0D=0A    =
+                                                </span>=0D=0A    =
+                                            </td>=0D=0A          =
+                                  </tr>=0D=0A                    =
+                    </table>=0D=0A                               =
+     </td>=0D=0A                                </tr>=0D=0A=0D=0A=
+                                <!-- Billing information -->=0D=0A=
+                                <tr>=0D=0A                       =
+             <td colspan=3D"2">=0D=0A                            =
+            <h2 style=3D"color: #666666; font-size: 18px; font-fa=
+mily: 'Calibri Bold', 'Calibri Regular', 'Calibri'; font-weight: =
+bold; line-height: 1.5em; margin-bottom: 10px; margin-top: 30px;"=
+>=0D=0A                                            Billing inform=
+ation=0D=0A                                        </h2>=0D=0A   =
+                                 </td>=0D=0A                     =
+           </tr>=0D=0A                                <tr>=0D=0A =
+                                   <td colspan=3D"2">=0D=0A      =
+                                  <table cellpadding=3D"0" cellsp=
+acing=3D"0" width=3D"100%">=0D=0A                                =
+            <!-- Billing name -->=0D=0A                          =
+                  <tr>=0D=0A                                     =
+           <td width=3D"120" style=3D"border-bottom: 1px dotted #=
+c7c6bf; padding: 6px 6px;">=0D=0A                                =
+                    <span style=3D"color: #777777; font-size: 15p=
+x; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A    =
+                                                    Contact name:=
+=0D=0A                                                    </span>=
+=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          David Nelson Elske=0D=0A                               =
+                     </span>=0D=0A                               =
+                 </td>=0D=0A                                     =
+       </tr>=0D=0A                                            <!-=
+- Billing company name -->=0D=0A                                 =
+           <tr>=0D=0A                                            =
+    <td width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf;=
+ padding: 6px 6px;">=0D=0A                                       =
+             <span style=3D"color: #777777; font-size: 15px; font=
+-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A           =
+                                             Contact company name=
+:=0D=0A                                                    </span=
+>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          =0D=0A                                                 =
+       Hemisphere on The Bow - OCP 9913090=0D=0A                 =
+                                       =0D=0A                    =
+                                </span>=0D=0A                    =
+                            </td>=0D=0A                          =
+                  </tr>=0D=0A                                    =
+        <!-- Billing phone number -->=0D=0A                      =
+                      <tr>=0D=0A                                 =
+               <td width=3D"120" style=3D"border-bottom: 1px dott=
+ed #c7c6bf; padding: 6px 6px;">=0D=0A                            =
+                        <span style=3D"color: #777777; font-size:=
+ 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A=
+                                                        Contact p=
+hone number:=0D=0A                                               =
+     </span>=0D=0A                                               =
+ </td>=0D=0A                                                <td s=
+tyle=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  =0D=0A                                         =
+               (403) 650-5365=0D=0A                              =
+                          =0D=0A                                 =
+                       =0D=0A                                    =
+                </span>=0D=0A                                    =
+            </td>=0D=0A                                          =
+  </tr>=0D=0A                                            <!-- Bil=
+ling mobile number -->=0D=0A                                     =
+       <tr>=0D=0A                                                =
+<td width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; pad=
+ding: 6px 6px;">=0D=0A                                           =
+         <span style=3D"color: #777777; font-size: 15px; font-fam=
+ily: Calibri, Helvetica, Arial, sans-serif">=0D=0A               =
+                                         Contact mobile number:=0D=0A=
+                                                    </span>=0D=0A=
+                                                </td>=0D=0A      =
+                                          <td style=3D"border-bot=
+tom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A               =
+                                     <span style=3D"color: #77777=
+7; font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-=
+serif">=0D=0A                                                    =
+    =0D=0A                                                       =
+ N/A=0D=0A                                                       =
+ =0D=0A                                                    </span=
+>=0D=0A                                                </td>=0D=0A=
+                                            </tr>=0D=0A          =
+                                  <!-- Billing email -->=0D=0A   =
+                                         <tr>=0D=0A              =
+                                  <td width=3D"120" style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          Contact email:=0D=0A                                   =
+                 </span>=0D=0A                                   =
+             </td>=0D=0A                                         =
+       <td style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6=
+px 6px;">=0D=0A                                                  =
+  <span style=3D"color: #777777; font-size: 15px; font-family: Ca=
+libri, Helvetica, Arial, sans-serif">=0D=0A                      =
+                                  david.nelson.elske@gmail.com=0D=0A=
+                                                    </span>=0D=0A=
+                                                </td>=0D=0A      =
+                                      </tr>=0D=0A                =
+                            <!-- Billing address -->=0D=0A       =
+                                     <tr>=0D=0A                  =
+                              <td width=3D"120" style=3D"border-b=
+ottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A             =
+                                       <span style=3D"color: #777=
+777; font-size: 15px; font-family: Calibri, Helvetica, Arial, san=
+s-serif">=0D=0A                                                  =
+      Address:=0D=0A                                             =
+       </span>=0D=0A                                             =
+   </td>=0D=0A                                                <td=
+ style=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                   3412 Parkdale Blvd. N.W.=0D=0A                =
+                                    </span>=0D=0A                =
+                                </td>=0D=0A                      =
+                      </tr>=0D=0A                                =
+            <!-- Billing city -->=0D=0A                          =
+                  <tr>=0D=0A                                     =
+           <td width=3D"120" style=3D"border-bottom: 1px dotted #=
+c7c6bf; padding: 6px 6px;">=0D=0A                                =
+                    <span style=3D"color: #777777; font-size: 15p=
+x; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A    =
+                                                    City:=0D=0A  =
+                                                  </span>=0D=0A  =
+                                              </td>=0D=0A        =
+                                        <td style=3D"border-botto=
+m: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A                 =
+                                   <span style=3D"color: #777777;=
+ font-size: 15px; font-family: Calibri, Helvetica, Arial, sans-se=
+rif">=0D=0A                                                      =
+  Calgary=0D=0A                                                  =
+  </span>=0D=0A                                                </=
+td>=0D=0A                                            </tr>=0D=0A =
+                                           <!-- Billing province =
+-->=0D=0A                                            <tr>=0D=0A  =
+                                              <td width=3D"120" s=
+tyle=3D"border-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A=
+                                                    <span style=3D=
+"color: #777777; font-size: 15px; font-family: Calibri, Helvetica=
+, Arial, sans-serif">=0D=0A                                      =
+                  Province:=0D=0A                                =
+                    </span>=0D=0A                                =
+                </td>=0D=0A                                      =
+          <td style=3D"border-bottom: 1px dotted #c7c6bf; padding=
+: 6px 6px;">=0D=0A                                               =
+     <span style=3D"color: #777777; font-size: 15px; font-family:=
+ Calibri, Helvetica, Arial, sans-serif">=0D=0A                   =
+                                     Alberta=0D=0A               =
+                                     </span>=0D=0A               =
+                                 </td>=0D=0A                     =
+                       </tr>=0D=0A                               =
+             <!-- Billing postal code -->=0D=0A                  =
+                          <tr>=0D=0A                             =
+                   <td width=3D"120" style=3D"border-bottom: 1px =
+dotted #c7c6bf; padding: 6px 6px;">=0D=0A                        =
+                            <span style=3D"color: #777777; font-s=
+ize: 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A=
+                                                        Postal co=
+de:=0D=0A                                                    </sp=
+an>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          T2N 3T4=0D=0A                                          =
+          </span>=0D=0A                                          =
+      </td>=0D=0A                                            </tr=
+>=0D=0A                                        </table>=0D=0A    =
+                                </td>=0D=0A                      =
+          </tr>=0D=0A=0D=0A                                <!-- O=
+n-site contact information -->=0D=0A                             =
+   <tr>=0D=0A                                    <td colspan=3D"2=
+">=0D=0A                                        <h2 style=3D"colo=
+r: #666666; font-size: 18px; font-family: 'Calibri Bold', 'Calibr=
+i Regular', 'Calibri'; font-weight: bold; line-height: 1.5em; mar=
+gin-bottom: 10px; margin-top: 30px;">=0D=0A                      =
+                      On-site contact information=0D=0A          =
+                              </h2>=0D=0A                        =
+            </td>=0D=0A                                </tr>=0D=0A=
+                                <tr>=0D=0A                       =
+             <td colspan=3D"2">=0D=0A                            =
+            <table cellpadding=3D"0" cellspacing=3D"0" width=3D"1=
+00%">=0D=0A                                            <!-- On-si=
+te contact name -->=0D=0A                                        =
+    <tr>=0D=0A                                                <td=
+ width=3D"120" style=3D"border-bottom: 1px dotted #c7c6bf; paddin=
+g: 6px 6px;">=0D=0A                                              =
+      <span style=3D"color: #777777; font-size: 15px; font-family=
+: Calibri, Helvetica, Arial, sans-serif">=0D=0A                  =
+                                      Contact name:=0D=0A        =
+                                            </span>=0D=0A        =
+                                        </td>=0D=0A              =
+                                  <td style=3D"border-bottom: 1px=
+ dotted #c7c6bf; padding: 6px 6px;">=0D=0A                       =
+                             <span style=3D"color: #777777; font-=
+size: 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A=
+                                                        =0D=0A   =
+                                                     Logan Murdoc=
+h=0D=0A                                                        =0D=0A=
+                                                    </span>=0D=0A=
+                                                </td>=0D=0A      =
+                                      </tr>=0D=0A                =
+                            <!-- On-site company name -->=0D=0A  =
+                                          <tr>=0D=0A             =
+                                   <td width=3D"120" style=3D"bor=
+der-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A        =
+                                            <span style=3D"color:=
+ #777777; font-size: 15px; font-family: Calibri, Helvetica, Arial=
+, sans-serif">=0D=0A                                             =
+           Contact company name:=0D=0A                           =
+                         </span>=0D=0A                           =
+                     </td>=0D=0A                                 =
+               <td style=3D"border-bottom: 1px dotted #c7c6bf; pa=
+dding: 6px 6px;">=0D=0A                                          =
+          <span style=3D"color: #777777; font-size: 15px; font-fa=
+mily: Calibri, Helvetica, Arial, sans-serif">=0D=0A              =
+                                          =0D=0A                 =
+                                       Contact Electric=0D=0A    =
+                                                    =0D=0A       =
+                                             </span>=0D=0A       =
+                                         </td>=0D=0A             =
+                               </tr>=0D=0A                       =
+                     <!-- On-site contact phone number -->=0D=0A =
+                                           <tr>=0D=0A            =
+                                    <td width=3D"120" style=3D"bo=
+rder-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A       =
+                                             <span style=3D"color=
+: #777777; font-size: 15px; font-family: Calibri, Helvetica, Aria=
+l, sans-serif">=0D=0A                                            =
+            Contact phone number:=0D=0A                          =
+                          </span>=0D=0A                          =
+                      </td>=0D=0A                                =
+                <td style=3D"border-bottom: 1px dotted #c7c6bf; p=
+adding: 6px 6px;">=0D=0A                                         =
+           <span style=3D"color: #777777; font-size: 15px; font-f=
+amily: Calibri, Helvetica, Arial, sans-serif">=0D=0A             =
+                                           =0D=0A                =
+                                        (403) 830-1233=0D=0A     =
+                                                   =0D=0A        =
+                                                =0D=0A           =
+                                         </span>=0D=0A           =
+                                     </td>=0D=0A                 =
+                           </tr>=0D=0A                           =
+                 <!-- On-site contact mobile number -->=0D=0A    =
+                                        <tr>=0D=0A               =
+                                 <td width=3D"120" style=3D"borde=
+r-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A          =
+                                          <span style=3D"color: #=
+777777; font-size: 15px; font-family: Calibri, Helvetica, Arial, =
+sans-serif">=0D=0A                                               =
+         Contact mobile number:=0D=0A                            =
+                        </span>=0D=0A                            =
+                    </td>=0D=0A                                  =
+              <td style=3D"border-bottom: 1px dotted #c7c6bf; pad=
+ding: 6px 6px;">=0D=0A                                           =
+         <span style=3D"color: #777777; font-size: 15px; font-fam=
+ily: Calibri, Helvetica, Arial, sans-serif">=0D=0A               =
+                                         =0D=0A                  =
+                                      N/A=0D=0A                  =
+                                      =0D=0A                     =
+                               </span>=0D=0A                     =
+                           </td>=0D=0A                           =
+                 </tr>=0D=0A                                     =
+       <!-- On-site contact email -->=0D=0A                      =
+                      <tr>=0D=0A                                 =
+               <td width=3D"120" style=3D"border-bottom: 1px dott=
+ed #c7c6bf; padding: 6px 6px;">=0D=0A                            =
+                        <span style=3D"color: #777777; font-size:=
+ 15px; font-family: Calibri, Helvetica, Arial, sans-serif">=0D=0A=
+                                                        Contact e=
+mail:=0D=0A                                                    </=
+span>=0D=0A                                                </td>=0D=0A=
+                                                <td style=3D"bord=
+er-bottom: 1px dotted #c7c6bf; padding: 6px 6px;">=0D=0A         =
+                                           <span style=3D"color: =
+#777777; font-size: 15px; font-family: Calibri, Helvetica, Arial,=
+ sans-serif">=0D=0A                                              =
+          =0D=0A                                                 =
+       incontactelectric@gmail.com=0D=0A                         =
+                               =0D=0A                            =
+                        </span>=0D=0A                            =
+                    </td>=0D=0A                                  =
+          </tr>=0D=0A                                        </ta=
+ble>=0D=0A                                    </td>=0D=0A        =
+                        </tr>=0D=0A=0D=0A                        =
+        <tr>=0D=0A                                    <td>&nbsp;<=
+/td>=0D=0A                                </tr>=0D=0A            =
+                    =0D=0A                            </table>=0D=0A=
+									=0D=0A									<!-- END Insert data <tr> blocks -->=0D=0A=
+									</td>=0D=0A								</tr>=0D=0A							</table>=0D=0A					=
+		=0D=0A							=0D=0A                        </td>=0D=0A         =
+               <td></td>=0D=0A                    </tr>=0D=0A    =
+            </table>=0D=0A            </td>=0D=0A        </tr>=0D=0A=
+    </table>=0D=0A</body>=0D=0A</html>
+
